@@ -3,7 +3,6 @@ from prometheus_client import Gauge
 
 map_name_metric = Gauge('ark_map_name_info', 'Current map name on the server', ['map_name'])
 startup_time_gauge = Gauge('ark_startup_time_seconds', 'Time taken for full server startup in seconds')
-player_count_gauge = Gauge('ark_player_count', 'Number of players currently online')
 session_name_metric = Gauge('ark_session_name_info', 'Current session name of the server', ['session_name'])
 cluster_id_metric = Gauge('ark_cluster_id_info', 'Cluster ID associated with the server', ['cluster_id'])
 cluster_directory_override_metric = Gauge('ark_cluster_directory_override', 'Cluster directory override path', ['cluster_directory_override'])
