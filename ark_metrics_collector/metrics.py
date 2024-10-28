@@ -1,10 +1,6 @@
 # ark_metrics_collector/metrics.py
 from prometheus_client import Gauge
 
-# ark_metrics_collector/metrics.py
-from prometheus_client import Gauge
-
-
 map_name_metric = Gauge('ark_map_name_info', 'Current map name on the server', ['map_name'])
 startup_time_gauge = Gauge('ark_startup_time_seconds', 'Time taken for full server startup in seconds')
 player_count_gauge = Gauge('ark_player_count', 'Number of players currently online')
