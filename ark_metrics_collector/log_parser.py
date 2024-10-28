@@ -24,6 +24,8 @@ def parse_log_line(line):
         active_players[unique_net_id] = player_name
         active_players_metric.labels(player_name=player_name, unique_net_id=unique_net_id).set(1)
         logging.debug(f"Player joined: {player_name} with UniqueNetId: {unique_net_id}")
+    else:
+        logging.debug("No match found for player joining.")
 
     # Check for player leaving
     leave_match = re.search(r'(\S+) \[UniqueNetId:(\w+)', line)
@@ -36,6 +38,8 @@ def parse_log_line(line):
             del active_players[unique_net_id]
             active_players_metric.labels(player_name=player_name, unique_net_id=unique_net_id).set(0)
             logging.debug(f"Player left: {player_name} with UniqueNetId: {unique_net_id}")
+    else:
+        logging.debug("No match found for player leaving.")
 
     # Extract map_name
     map_match = re.search(r'Commandline:.*?(\w+_WP)\?', line)
