@@ -1,11 +1,7 @@
 # ark_metrics_collector/log_parser.py
 import re
 import logging
-from .metrics import (
-    map_name_metric, startup_time_gauge, player_count_gauge,
-    session_name_metric, cluster_id_metric, cluster_directory_override_metric, installed_mods_metric,
-    active_players_metric
-)
+from .metrics import active_players_metric
 
 # Dictionary to track active players
 active_players = {}
@@ -20,12 +16,13 @@ def parse_log_line(line):
         player_name = join_match.group(1)
         unique_net_id = join_match.group(2)
 
-        # Add player to active_players and set metric
-        active_players[unique_net_id] = player_name
-        active_players_metric.labels(player_name=player_name, unique_net_id=unique_net_id).set(1)
-        logging.debug(f"Player joined: {player_name} with UniqueNetId: {unique_net_id}")
-    else:
-        logging.debug("No match found for player joining.")
+        # Only increment metric if the player is not already logged in
+        if unique_net_id not in active_players:
+            active_players[unique_net_id] = player_name
+            active_players_metric.inc()  # Increment for a new player joining
+            logging.debug(f"Player joined: {player_name} with UniqueNetId: {unique_net_id}")
+        else:
+            logging.debug(f"Player {player_name} with UniqueNetId {unique_net_id} is already logged in.")
 
     # Check for player leaving
     leave_match = re.search(r'(\S+) \[UniqueNetId:(\w+)', line)
@@ -33,13 +30,14 @@ def parse_log_line(line):
         player_name = leave_match.group(1)
         unique_net_id = leave_match.group(2)
 
-        # Remove player from active_players and unset metric
+        # Only decrement metric if the player is currently logged in
         if unique_net_id in active_players:
             del active_players[unique_net_id]
-            active_players_metric.labels(player_name=player_name, unique_net_id=unique_net_id).set(0)
+            active_players_metric.dec()  # Decrement when a player leaves
             logging.debug(f"Player left: {player_name} with UniqueNetId: {unique_net_id}")
-    else:
-        logging.debug("No match found for player leaving.")
+        else:
+            logging.debug(f"Player {player_name} with UniqueNetId {unique_net_id} is not currently logged in.")
+
 
     # Extract map_name
     map_match = re.search(r'Commandline:.*?(\w+_WP)\?', line)

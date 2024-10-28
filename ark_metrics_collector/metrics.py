@@ -12,5 +12,4 @@ session_name_metric = Gauge('ark_session_name_info', 'Current session name of th
 cluster_id_metric = Gauge('ark_cluster_id_info', 'Cluster ID associated with the server', ['cluster_id'])
 cluster_directory_override_metric = Gauge('ark_cluster_directory_override', 'Cluster directory override path', ['cluster_directory_override'])
 installed_mods_metric = Gauge('ark_installed_mods_info', 'Installed mods on the server', ['mod_id'])
-active_players_metric = Gauge('ark_active_players', 'Players currently logged into the Ark', ['player_name', 'unique_net_id'])
-
+active_players_metric = Gauge('ark_active_players_count', 'Number of players currently logged into the Ark')
