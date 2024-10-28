@@ -82,8 +82,3 @@ def parse_log_line(line):
             installed_mods_metric.labels(mod_id=mod_id).set(1)
             logging.debug(f"Installed mod ID set to: {mod_id}")
 
-    # Detect server advertisement for player count initialization
-    if "Server has completed startup and is now advertising" in line:
-        player_count_gauge.set(0)
-        logging.debug("Player count initialized to 0")
-
