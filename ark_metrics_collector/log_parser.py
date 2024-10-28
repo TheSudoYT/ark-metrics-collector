@@ -3,6 +3,7 @@ import re
 import logging
 from .metrics import (
     active_players_metric, 
+    active_player_count_metric,  # Import the new count metric
     map_name_metric, 
     startup_time_gauge, 
     session_name_metric, 
@@ -24,10 +25,11 @@ def parse_log_line(line):
         player_name = join_match.group(1)
         unique_net_id = join_match.group(2)
 
-        # Only increment metric if the player is not already logged in
+        # Only set metric if the player is not already logged in
         if unique_net_id not in active_players:
             active_players[unique_net_id] = player_name
-            active_players_metric.inc()  # Increment for a new player joining
+            active_players_metric.labels(player_name=player_name).set(1)  # Set active for this player
+            active_player_count_metric.inc()  # Increment the total active player count
             logging.debug(f"Player joined: {player_name} with UniqueNetId: {unique_net_id}")
         else:
             logging.debug(f"Player {player_name} with UniqueNetId {unique_net_id} is already logged in.")
@@ -38,13 +40,15 @@ def parse_log_line(line):
         player_name = leave_match.group(1)
         unique_net_id = leave_match.group(2)
 
-        # Only decrement metric if the player is currently logged in
+        # Only unset metric if the player is currently logged in
         if unique_net_id in active_players:
             del active_players[unique_net_id]
-            active_players_metric.dec()  # Decrement when a player leaves
+            active_players_metric.labels(player_name=player_name).set(0)  # Set inactive for this player
+            active_player_count_metric.dec()  # Decrement the total active player count
             logging.debug(f"Player left: {player_name} with UniqueNetId: {unique_net_id}")
         else:
             logging.debug(f"Player {player_name} with UniqueNetId {unique_net_id} is not currently logged in.")
+
 
 
     # Extract map_name
