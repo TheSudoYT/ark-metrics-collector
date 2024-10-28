@@ -1,0 +1,3 @@
+# config.yaml
+poll_interval: 10         # Polling interval in seconds
+log_file_path: "/path/to/ark_log.txt"  # Path to the Ark log file
