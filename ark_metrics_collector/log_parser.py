@@ -3,12 +3,39 @@ import re
 import logging
 from .metrics import (
     map_name_metric, startup_time_gauge, player_count_gauge,
-    session_name_metric, cluster_id_metric, cluster_directory_override_metric, installed_mods_metric
+    session_name_metric, cluster_id_metric, cluster_directory_override_metric, installed_mods_metric,
+    active_players_metric
 )
+
+# Dictionary to track active players
+active_players = {}
 
 def parse_log_line(line):
     """Parse a log line and extract metrics based on the log format."""
     logging.debug(f"Parsing line: {line}")
+
+    # Check for player joining
+    join_match = re.search(r'(\S+) \[UniqueNetId:(\w+)', line)
+    if join_match and "joined this ARK!" in line:
+        player_name = join_match.group(1)
+        unique_net_id = join_match.group(2)
+
+        # Add player to active_players and set metric
+        active_players[unique_net_id] = player_name
+        active_players_metric.labels(player_name=player_name, unique_net_id=unique_net_id).set(1)
+        logging.debug(f"Player joined: {player_name} with UniqueNetId: {unique_net_id}")
+
+    # Check for player leaving
+    leave_match = re.search(r'(\S+) \[UniqueNetId:(\w+)', line)
+    if leave_match and "left this ARK!" in line:
+        player_name = leave_match.group(1)
+        unique_net_id = leave_match.group(2)
+
+        # Remove player from active_players and unset metric
+        if unique_net_id in active_players:
+            del active_players[unique_net_id]
+            active_players_metric.labels(player_name=player_name, unique_net_id=unique_net_id).set(0)
+            logging.debug(f"Player left: {player_name} with UniqueNetId: {unique_net_id}")
 
     # Extract map_name
     map_match = re.search(r'Commandline:.*?(\w+_WP)\?', line)
@@ -25,7 +52,7 @@ def parse_log_line(line):
         logging.debug(f"Startup time set to: {startup_time}")
 
     # Extract session_name
-    session_name_match = re.search(r'SessionName=(\S+)', line)
+    session_name_match = re.search(r'SessionName=([^\?]+)', line)
     if session_name_match:
         session_name = session_name_match.group(1)
         session_name_metric.labels(session_name=session_name).set(1)
