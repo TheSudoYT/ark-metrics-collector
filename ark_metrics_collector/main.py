@@ -1,5 +1,6 @@
 import argparse
 import yaml
+from .app import start
 
 def main():
     parser = argparse.ArgumentParser(description="Ark Metrics Collector")
@@ -15,6 +16,8 @@ def main():
     print(f"Metrics collector port: {config['metrics_collector_port']}")
     
     # Start the app with the config settings
+
+    start()
 
 if __name__ == "__main__":
     main()
