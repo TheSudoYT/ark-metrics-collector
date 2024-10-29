@@ -1,6 +1,10 @@
 # ark-metrics-collector
 Prometheus metrics exporter service for Ark Survival Ascended servers.
 
+## Grafana Dashboard
+
+Grafana dashboard provided for use https://grafana.com/grafana/dashboards/22189-ark-survival-ascended/
+
 ## Requirements
 
 You must have:
