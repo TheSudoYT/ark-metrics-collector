@@ -15,7 +15,7 @@ setup(
     entry_points={
         'console_scripts': [
             'ark-metrics-collector=ark_metrics_collector.main:main',
-            'ark-metrics-collector=ark_metrics_collector.app:start'
+            'ark-metrics-collector-start=ark_metrics_collector.app:start'
         ],
     },
 )
