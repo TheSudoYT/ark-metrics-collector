@@ -15,7 +15,14 @@ The following arguments are required when starting Ark to display all possible m
 
 ## Ark Metrics Collector Configuration
 
-Modify `config.yaml`
+Modify `config.yaml`. The following are configuration options:
+
+| Key                   | Description                              | Example Value                          |
+|-----------------------|------------------------------------------|----------------------------------------|
+| `poll_interval`       | Polling interval in seconds              | `10`                                   |
+| `log_file_path`       | Path to the Ark log file                 | `"/path/to/ShooterGame/Saved/Logs/ShooterGame.log"` |
+| `metrics_collector_port` | Port to expose `/metrics` endpoint     | `5001`                                 |
+
 
 ## Grafana Alloy Configuration
 
