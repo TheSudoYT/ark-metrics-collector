@@ -5,6 +5,7 @@ from prometheus_client import generate_latest
 import threading
 from .config import config
 from .polling import poll_log_file
+from .config import load_config
 
 app = Flask(__name__)
 
@@ -14,10 +15,15 @@ def metrics():
     """Endpoint to expose metrics for Prometheus scraping."""
     return Response(generate_latest(), mimetype='text/plain')
 
-def start():
+def start(config_path):
     """Start the Flask app and the polling thread."""
     metrics_collector_port = config["metrics_collector_port"]
-    
+    config = load_config(config_path)
+
+    print(f"Poll interval: {config['poll_interval']}")
+    print(f"Log file path: {config['log_file_path']}")
+    print(f"Metrics collector port: {config['metrics_collector_port']}")
+
     logging.basicConfig(level=logging.DEBUG)
 
     # Start log polling in a separate thread
