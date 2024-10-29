@@ -24,4 +24,4 @@ def start():
     poll_thread.start()
 
     # Run Flask app for the metrics endpoint
-    app.run(host="0.0.0.0", metrics_collector_portport=5000)
+    app.run(host="0.0.0.0", metrics_collector_port=5000)
