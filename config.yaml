@@ -1,3 +1,4 @@
 # config.yaml
-poll_interval: 10         # Polling interval in seconds
-log_file_path: "/path/to/ark_log.txt"  # Path to the Ark log file
+poll_interval: 10                                                 # Polling interval in seconds
+log_file_path: "/path/to/ShooterGame/Saved/Logs/ShooterGame.log"  # Path to the Ark log file
+metrics_collector_port: 5001                                      # Port to expose /metrics at
