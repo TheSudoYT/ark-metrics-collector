@@ -7,7 +7,6 @@ from .config import config
 from .polling import poll_log_file
 
 app = Flask(__name__)
-metrics_collector_port = config["metrics_collector_port"]
 
 # Flask route to expose metrics
 @app.route('/metrics')
@@ -17,6 +16,8 @@ def metrics():
 
 def start():
     """Start the Flask app and the polling thread."""
+    metrics_collector_port = config["metrics_collector_port"]
+    
     logging.basicConfig(level=logging.DEBUG)
 
     # Start log polling in a separate thread
@@ -24,4 +25,4 @@ def start():
     poll_thread.start()
 
     # Run Flask app for the metrics endpoint
-    app.run(host="0.0.0.0", metrics_collector_port=5000)
+    app.run(host="0.0.0.0", port=metrics_collector_port)
