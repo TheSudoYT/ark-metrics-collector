@@ -3,7 +3,6 @@ import logging
 from flask import Flask, Response
 from prometheus_client import generate_latest
 import threading
-from .config import config
 from .polling import poll_log_file
 from .config import load_config
 
