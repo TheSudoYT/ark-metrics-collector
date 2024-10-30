@@ -5,6 +5,13 @@ Prometheus metrics exporter service for Ark Survival Ascended servers.
 
 Grafana dashboard provided for use https://grafana.com/grafana/dashboards/22189-ark-survival-ascended/
 
+## Installing
+
+1. Install python3-pip
+2. Run `pip install ark-metrics-collector`
+3. Create a `config.yaml` with the [Ark Metrics Collector Configuration](#ark-metrics-collector-configuration) 
+4. Run `ark-metrics-collector --config=/path/to/config.yaml`
+
 ## Requirements
 
 You must have:
@@ -27,6 +34,13 @@ Modify `config.yaml`. The following are configuration options:
 | `log_file_path`       | Path to the Ark log file                 | `"/path/to/ShooterGame/Saved/Logs/ShooterGame.log"` |
 | `metrics_collector_port` | Port to expose `/metrics` endpoint     | `5001`                                 |
 
+Example:
+
+```yaml
+poll_interval: 10                                                 
+log_file_path: "/ark-asa/ShooterGame/Saved/Logs/ShooterGame.log"  
+metrics_collector_port: 5002                                      
+```
 
 ## Grafana Alloy Configuration
 
