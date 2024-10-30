@@ -1,22 +1,17 @@
-# ark_metrics_collector/app.py
 import logging
 from flask import Flask, Response
 from prometheus_client import generate_latest
 import threading
-from .polling import poll_log_file
 from .config import load_config
+from .polling import poll_log_file
 
 app = Flask(__name__)
 
-# Flask route to expose metrics
 @app.route('/metrics')
 def metrics():
-    """Endpoint to expose metrics for Prometheus scraping."""
     return Response(generate_latest(), mimetype='text/plain')
 
 def start(config_path):
-    """Start the Flask app and the polling thread."""
-    metrics_collector_port = config["metrics_collector_port"]
     config = load_config(config_path)
 
     print(f"Poll interval: {config['poll_interval']}")
@@ -25,9 +20,12 @@ def start(config_path):
 
     logging.basicConfig(level=logging.DEBUG)
 
-    # Start log polling in a separate thread
-    poll_thread = threading.Thread(target=poll_log_file)
+    # Start log polling in a separate thread with config values
+    poll_thread = threading.Thread(
+        target=poll_log_file,
+        args=(config['log_file_path'], config['poll_interval'])
+    )
     poll_thread.start()
 
-    # Run Flask app for the metrics endpoint
-    app.run(host="0.0.0.0", port=metrics_collector_port)
+    app.run(host="0.0.0.0", port=config["metrics_collector_port"])
+
