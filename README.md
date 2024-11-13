@@ -5,12 +5,23 @@ Prometheus metrics exporter service for Ark Survival Ascended servers.
 
 Grafana dashboard provided for use https://grafana.com/grafana/dashboards/22189-ark-survival-ascended/
 
-## Installing
+## Installing (pip)
 
 1. Install python3-pip
 2. Run `pip install ark-metrics-collector`
 3. Create a `config.yaml` with the [Ark Metrics Collector Configuration](#ark-metrics-collector-configuration) 
 4. Run `ark-metrics-collector --config=/path/to/config.yaml`
+
+## Installing (Docker)
+
+A `config.yaml` with the [Ark Metrics Collector Configuration](#ark-metrics-collector-configuration) is required to be mounted at `/app/config.yaml` within the container. Port 5000 is exposed. Ensure the port mapping to 5000 matches the port defined in the `config.yaml` file. Mount  the `ShooterGame.log` somewhere in the container that matches the `log_file_path` set in `config.yaml`.
+
+```bash
+docker run -d -p 5000:5000 --name ark-metrics-collector \
+-v /opt/config.yaml:/app/config.yaml \
+-v /ark-asa/ShooterGame/Saved/Logs/ShooterGame.log:/app/ShooterGame.log \
+ark-metrics-collector
+```
 
 ## Requirements
 
@@ -31,8 +42,8 @@ Modify `config.yaml`. The following are configuration options:
 | Key                   | Description                              | Example Value                          |
 |-----------------------|------------------------------------------|----------------------------------------|
 | `poll_interval`       | Polling interval in seconds              | `10`                                   |
-| `log_file_path`       | Path to the Ark log file                 | `"/path/to/ShooterGame/Saved/Logs/ShooterGame.log"` |
-| `metrics_collector_port` | Port to expose `/metrics` endpoint     | `5001`                                 |
+| `log_file_path`       | Path to the Ark log file. For container deployments, set to a path inside the container that is mounted to ShooterGame.log. | `"/path/to/ShooterGame/Saved/Logs/ShooterGame.log"` |
+| `metrics_collector_port` | Port to expose `/metrics` endpoint. For container deployments set to 5000 until support for custom ports in containers is added.     | `5001`                                 |
 
 Example:
 
