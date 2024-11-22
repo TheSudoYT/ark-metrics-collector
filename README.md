@@ -19,6 +19,12 @@ You must have:
 - Grafana alloy or another metrics scrapping tool capable of scraping prometheus metrics.
 - A Promtheus server to forward metrics to.
 - Python3 installed.
+- grafana.ini with panel flags:
+```
+[panels]
+    allow_embedding = true
+    disable_sanitize_html = true
+```
 
 The following arguments are required when starting Ark to display all possible metrics:
 

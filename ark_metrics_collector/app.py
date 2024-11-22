@@ -27,5 +27,4 @@ def start(config_path):
     )
     poll_thread.start()
 
-    app.run(host="0.0.0.0", port=config["metrics_collector_port"])
-
+    app.run(debug=False, host="0.0.0.0", port=config["metrics_collector_port"])

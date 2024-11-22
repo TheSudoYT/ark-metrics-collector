@@ -16,4 +16,3 @@ def poll_log_file(log_file_path, poll_interval):
                 parse_log_line(line)
 
         time.sleep(poll_interval)
-
